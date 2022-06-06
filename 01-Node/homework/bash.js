@@ -26,7 +26,12 @@ process.stdin.on('data', function (data) {
   if (cmd === 'ls') {
     commands[cmd]();
   } */
-  commands.hasOwnProperty(cmd) && commands[cmd](args);
+  function write(output) {
+    process.stdout.write(output)
+    process.stdout.write('\n');
+  }
+
+  commands.hasOwnProperty(cmd) && commands[cmd](args, write);
 
   process.stdout.write('\nprompt > ');
 });

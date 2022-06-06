@@ -1,35 +1,68 @@
 var fs = require("fs");
+var request = require("request");
 
 module.exports = {
-    date: () => {
-        process.stdout.write(Date());
+    date: (args, done) => {
+        done(Date());
     },
-    pwd: () => {
-        process.stdout.write('Directorio actual: '+ process.cwd());
+    pwd: (args, done) => {
+        done('Directorio actual: '+ process.cwd());
     }, 
-    ls: () => {
+    ls: (args, done) => {
         fs.readdir('.', function(err, files) {
             if (err) throw err;
-            process.stdout.write("\n\n");
+            done("\n");
             files.forEach(function(file) {
-              process.stdout.write(file.toString() + "\n");
+              done(file.toString());
             })
             //process.stdout.write("prompt > ");
           });
     },
-    echo: (args) => {
-        process.stdout.write(args.join(' '));
+    echo: (args, done) => {
+        done(args.join(' '));
     },
-    cat: (args) => {
+    cat: (args, done) => {
         fs.readFile(args[0], 'utf8', (err, data) => {
             if (err) {
-                process.stdout.write(err);
+                done(err);
                 return;
             }
-            process.stdout.write("\n\n");
-            process.stdout.write(data);
-            console.log(typeof(data));
+            done("\n");
+            done(data);
         });
-    }
+    },
+    head: (args, done) => {
+        fs.readFile(args[0], 'utf8', (err, data) => {
+            if (err) {
+                done(err);
+                return;
+            }
+            const lineas = data.split("\n")
+            done("\n");
 
+            for(let i = 0; i < 10; i++){
+                done(lineas[i]);
+            }
+        });
+    },
+    tail: (args, done) => {
+        fs.readFile(args[0], 'utf8', (err, data) => {
+            if (err) {
+                done(err);
+                return;
+            }
+            const lineas = data.split("\n")
+            done("\n");
+
+            for(let i = (lineas.length-10); i < lineas.length; i++){
+                done(lineas[i]);
+            }
+        });
+    },
+    curl: (args, done) => {
+        request(args[0], function (error, response, body) {
+            if(error) throw error
+            done(body);
+        })
+    }
 }
