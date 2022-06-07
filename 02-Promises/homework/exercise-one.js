@@ -44,10 +44,10 @@ function problemA () {
    */
 
   // callback version
-  readFile('poem-one/stanza-01.txt', function (err, stanza) {
+ /*  readFile('poem-one/stanza-01.txt', function (err, stanza) {
     console.log('-- A. callback version --');
     blue(stanza);
-  });
+  }); */
 
   // promise version
   // ???

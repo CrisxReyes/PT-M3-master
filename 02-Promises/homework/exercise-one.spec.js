@@ -65,7 +65,7 @@ describe('exercise one (involving poem one)', function () {
 
 	describe('problemB', function () {
 
-		xit('logs the second and third stanzas in any order', function (done) {
+		it('logs the second and third stanzas in any order', function (done) {
 			exercise.problemB();
 			setTimeout(function () {
 				expect(blue).to.have.been.called.with(stanzas[1]);
