@@ -44,14 +44,17 @@ function problemA () {
    */
 
   // callback version
- /*  readFile('poem-one/stanza-01.txt', function (err, stanza) {
+/*   readFile('poem-one/stanza-01.txt', function (err, stanza) {
     console.log('-- A. callback version --');
     blue(stanza);
   }); */
 
   // promise version
-  // ???
-
+  var promesa1 = promisifiedReadFile('poem-one/stanza-01.txt');
+  promesa1.then(function (stanza) {
+    console.log('-- A. callback version --');
+    blue(stanza);
+  })
 }
 
 function problemB () {
