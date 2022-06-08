@@ -36,7 +36,7 @@ function problemA () {
    */
 
   // callback version
-  async.each(['poem-two/stanza-01.txt', 'poem-two/stanza-02.txt'],
+/*   async.each(['poem-two/stanza-01.txt', 'poem-two/stanza-02.txt'],
     function (filename, eachDone) {
       readFile(filename, function (err, stanza) {
         console.log('-- A. callback version --');
@@ -47,11 +47,15 @@ function problemA () {
     function (err) {
       console.log('-- A. callback version done --');
     }
-  );
+  ); */
 
   // promise version
-  // ???
-
+  Promise.all([promisifiedReadFile('poem-two/stanza-01.txt'), promiseReadFile('poem-two/stanza-02.txt')])
+    .then(function (stanza){
+      blue(stanza[0]); 
+      blue(stanza[1]);
+      console.log('-- A. callback version done --');
+    })
 }
 
 function problemB () {
