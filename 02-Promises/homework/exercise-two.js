@@ -128,14 +128,17 @@ function problemC () {
   ); */
 
   // promise version
-  filenames.map(element => {
-    promisifiedReadFile(element)
-      .then(function (stanza){
-        blue(stanza)
-        return
-      })
-  })
-  console.log('-- C. promise version done --');
+  for(let i = 1, p = promisifiedReadFile(filenames[0]); i<=filenames.length; i++) {
+    p = p.then(stanza => {
+      blue(stanza);
+      if(i === filenames.length){
+        console.log('done');
+      }
+      else{
+        return promisifiedReadFile(filenames[i]);
+      }
+    });
+  }
 
 }
 
@@ -173,17 +176,23 @@ function problemD () {
   ); */
 
   // promise version
-  filenames.forEach(nombre => {
-    promisifiedReadFile(nombre)
-      .then(function (stanza){
-        blue(stanza)
-        return
-      }).catch(function (err){
+  for(let i = 1, p = promisifiedReadFile(filenames[0]); i<=filenames.length; i++) {
+    p = p.then(stanza => {
+      blue(stanza);
+      if(i === filenames.length){
+        console.log('done');
+      }
+      else{
+        return promisifiedReadFile(filenames[i]);
+      }
+    });
+    if(i === filenames.length){
+      p.catch(err => {
         magenta(new Error(err));
-        return
+        console.log('done');
       })
-  })
-  console.log('-- D. callback version done --');
+    }
+  }
 
 }
 
