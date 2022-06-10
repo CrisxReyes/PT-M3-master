@@ -156,7 +156,7 @@ function problemD () {
   var randIdx = Math.floor(Math.random() * filenames.length);
   filenames[randIdx] = 'wrong-file-name-' + (randIdx + 1) + '.txt';
 
-  // callback version
+ /*  // callback version
   async.eachSeries(filenames,
     function (filename, eachDone) {
       readFile(filename, function (err, stanza) {
@@ -170,10 +170,20 @@ function problemD () {
       if (err) magenta(new Error(err));
       console.log('-- D. callback version done --');
     }
-  );
+  ); */
 
   // promise version
-  // ???
+  filenames.forEach(nombre => {
+    promisifiedReadFile(nombre)
+      .then(function (stanza){
+        blue(stanza)
+        return
+      }).catch(function (err){
+        magenta(new Error(err));
+        return
+      })
+  })
+  console.log('-- D. callback version done --');
 
 }
 
