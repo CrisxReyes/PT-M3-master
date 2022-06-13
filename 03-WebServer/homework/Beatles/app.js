@@ -22,3 +22,23 @@ var beatles=[{
   profilePic:"http://cp91279.biography.com/BIO_Bio-Shorts_0_Ringo-Starr_SF_HD_768x432-16x9.jpg"
 }
 ]
+
+http.createServer(function (req, res) {
+
+  var urls = ['John%20Lennon',
+              'Paul%20McCartney',
+              'George%20Harrison',
+              'Richard%20Starkey'];
+
+  var name = req.url.split('/api/');
+
+  if(req.url === '/api'){
+    res.writeHead(200, {'Content-Type': 'application/json'})
+    res.end(JSON.stringify(beatles));
+  }else if(urls.includes(name[1])){
+    res.writeHead(200, {'Content-Type': 'application/json'})
+    res.end(JSON.stringify(beatles))
+  }
+  
+
+}).listen(1337, '127.0.0.1');
