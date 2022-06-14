@@ -25,20 +25,48 @@ var beatles=[{
 
 http.createServer(function (req, res) {
 
-  var urls = ['John%20Lennon',
-              'Paul%20McCartney',
-              'George%20Harrison',
-              'Richard%20Starkey'];
-
-  var name = req.url.split('/api/');
-
-  if(req.url === '/api'){
-    res.writeHead(200, {'Content-Type': 'application/json'})
-    res.end(JSON.stringify(beatles));
-  }else if(urls.includes(name[1])){
-    res.writeHead(200, {'Content-Type': 'application/json'})
-    res.end(JSON.stringify(beatles))
+  function API(req, res) {
+    //separar el link y quedarnos con el nombre solo si es diferente de /api
+    if ((req.url !== '/api') && (req.url !== '/favicon.ico')) {
+      var beatle = req.url.split('/api/')[1].split('%20').join(' ');
+    }
+    //preguntamos por el nombre y mostramos el json de cada Beatle
+    if (req.url === '/api') {
+      res.writeHead(200, { 'Content-Type': 'application/json' })
+      res.end(JSON.stringify(beatles));
+    } else if (beatles.find(element => element.name === beatle)) {
+      res.writeHead(200, { 'Content-Type': 'application/json' })
+      res.end(JSON.stringify(beatles.find(element => element.name === beatle)))
+    } else {
+      res.writeHead(404, { 'Content-Type': 'text/plain' })
+      res.end('404 NOT-FOUND');
+    }
   }
-  
 
+  function template(req, res) {
+    if ((req.url !== '/') && (req.url !== '/favicon.ico')) {
+      var nombre = req.url.split('/')[1].split('%20').join(' ');
+      var beatle = beatles.find(element => element.name === nombre);
+    }
+    if(req.url === '/'){
+      res.writeHead(200, { 'Content-Type':'text/html' })
+      var index = fs.readFileSync(__dirname +'/index.html', 'utf8');
+      res.end(index)
+    } else if (beatles.find(element => element.name === nombre)) {
+      var template = fs.readFileSync(__dirname +'/beatle.html', 'utf8');
+      template = template.replace('{nombre}', beatle.name);
+      template = template.replace('{birthdate}', beatle.birthdate);
+      template = template.replace('{picprofile}', beatle.profilePic);
+      res.end(template);
+    }else{
+      res.writeHead(404, { 'Content-Type': 'text/plain' })
+      res.end('404 NOT-FOUND');
+    }
+  }
+
+  if(req.url.includes('api')){
+    API(req, res);
+  }else {
+    template(req, res);
+  }
 }).listen(1337, '127.0.0.1');
