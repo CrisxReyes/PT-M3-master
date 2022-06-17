@@ -143,7 +143,7 @@ describe('Una promise', function(){
       expect( setFoo10 ).toHaveBeenCalled();
     });
 
-    xit('llama todos los success handlers en orden una vez cuando son completados', function(){
+    it('llama todos los success handlers en orden una vez cuando son completados', function(){
       promiseForNum.then( setFoo10 );
       promiseForNum.then( addToFoo );
       promiseForNum._internalResolve( 25 );
