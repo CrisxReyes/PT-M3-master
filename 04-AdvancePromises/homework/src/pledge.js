@@ -45,11 +45,41 @@ $Promise.prototype._callHandlers = function(){
     while (this._handlerGroups.length > 0) {
         let cb = this._handlerGroups.shift();
         if (this._state === 'fulfilled') {
-            cb.successCb && cb.successCb(this._value);
-            if(cb.successCb)
+            //cb.successCb && cb.successCb(this._value);
+           if(!cb.successCb){
+                cb.downstreamPromise._internalResolve(this._value);
+            }else{
+                try{
+                const result = cb.successCb(this._value);
+
+                if(result instanceof $Promise){
+                    result.then(value => cb.downstreamPromise._internalResolve(value), err => cb.downstreamPromise._internalReject(err));
+                }else{
+                    cb.downstreamPromise._internalResolve(result);
+                }
+            }catch(err){
+                cb.downstreamPromise._internalReject(err);
+            }
+            }
         }
         else if (this._state === 'rejected') {
-            cb.errorCb && cb.errorCb(this._value);
+            //cb.errorCb && cb.errorCb(this._value);
+            if(!cb.errorCb){
+                cb.downstreamPromise._internalReject(this._value);
+            }else{
+                try{
+                    const result = cb.errorCb(this._value);
+
+                    if(result instanceof $Promise){
+                        result.then(value => cb.downstreamPromise._internalResolve(value), err => cb.downstreamPromise._internalReject(err));
+                    }else{
+                        cb.downstreamPromise._internalResolve(result);
+                    }
+                }catch(err){
+                    cb.downstreamPromise._internalReject(err);
+                }
+                
+            }
         }
     }
 };
@@ -57,7 +87,10 @@ $Promise.prototype._callHandlers = function(){
 $Promise.prototype.catch = function(e) {
     return this.then(null, e);
 };
- 
+
+$Promise.prototype.resolve = function(){
+    
+}
 
 module.exports = $Promise;
 /*-------------------------------------------------------
