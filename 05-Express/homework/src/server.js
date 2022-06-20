@@ -5,14 +5,14 @@ const STATUS_USER_ERROR = 422;
 
 // This array of posts persists in memory across requests. Feel free
 // to change this to a let binding if you need to reassign it.
-const posts = [];
+let posts = [];
 
 const server = express();
 // to enable parsing of json bodies for post requests
 server.use(express.json());
 
 // TODO: your code to handle 
-var id = 0;
+let id = 0;
 server.post('/posts', function(req, res){
     const post = req.body;
 
@@ -103,21 +103,45 @@ server.put('/posts', function (req, res) {
 
 server.delete('/posts', function (req, res) {
     const id = req.body.id;
-    const post = posts.find(post => post.id === id);
 
     if(!id) {
         return res.status(STATUS_USER_ERROR).json({
             error: "No se proporciono in id de Post"
         });
     }
-    if(post){
-        posts  = posts.filter(post => post.id !== id);
-        return res.json({ success: true });
-    }else{
+
+    const post = posts.find(post => post.id === id);
+
+    if(!post){
         return res.status(STATUS_USER_ERROR).json({
             error: "El id no corresponde con ningun Post"
         });
     }
+        
+        posts  = posts.filter(post => post.id !== parseInt(id));
+        res.json({ success: true });
+    
+});
+
+server.delete('/author', function (req, res) {
+    const author = req.body.author;
+
+    if(!author){
+        return res.status(STATUS_USER_ERROR).json({
+            error: "No se proporciono el parametro author"
+        });
+    }
+
+    let post = posts.filter(post => post.author === author);
+
+    if(post.length === 0){
+        return res.status(STATUS_USER_ERROR).json({
+            error: "No existe el autor indicado"
+        });
+    }
+
+    posts = posts.filter(post => post.author !== author);
+    res.json(post);
 });
 
 
