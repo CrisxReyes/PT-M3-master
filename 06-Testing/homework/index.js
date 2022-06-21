@@ -9,6 +9,16 @@ app.get('/', (req, res) => {
   });
 });
 
+app.get('/test', function (req, res) {
+  res.send({
+    message: 'hola',
+  });
+});
+
+app.get('/sum', function (req, res) {
+
+});
+
 app.post('/product', (req, res) => {
   res.send({
     result: req.body.a / req.body.b,
